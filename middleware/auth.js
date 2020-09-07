@@ -13,10 +13,10 @@ exports.register = (req, res)=> {
         email: req.body.email,
         password: md5(req.body.password),
         role: req.body.role,
-        tanggal_daftar: new Date(),
+        tanggal_daftar: new Date()
     }
 
-    let query = 'SELECT email FROM ?? WHERE ??';
+    let query = "SELECT email FROM ?? WHERE ??=?";
     let table = ['user', 'email', post.email];
 
     query = mysql.format(query, table);
@@ -24,19 +24,19 @@ exports.register = (req, res)=> {
         if(error){
             console.log(error);
         }else{
-            if(rows.length === 0){
-                query = "INSERT INTO ?? SET ??";
-                table = ['user'];
+            if(rows.length == 0){
+                let query = "INSERT INTO ?? SET ?";
+                let table = ['user'];
                 query = mysql.format(query, table);
                 connection.query(query, post, (error, rows)=> {
                     if(error){
                         console.log(error);
                     } else{
-                        response.ok("Berhasil menambahkan user baru");
+                        response.ok('Berhasil menambahkan user baru', res);
                     }
                 });
             }else{
-                response.ok('Email sudah terdaftar!')
+                response.ok('Email sudah terdaftar!',res)
             }
         }
     })
