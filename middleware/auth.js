@@ -40,4 +40,52 @@ exports.register = (req, res)=> {
             }
         }
     })
-}
+};
+
+// controller login
+exports.login = (req, res) => {
+    let post = {
+        password : req.body.password,
+        email: req.body.email
+    }
+
+    let query = "SELECT * FROM ?? WHERE ??=? AND ??=?";
+    let table = ['user', 'password', md5(post.password), 'email', post.email];
+
+    query = mysql.format(query, table);
+    connection.query(query, (error, rows) => {
+        if(error){
+            console.log(error);
+        } else{
+            if(rows.length == 1){
+                let token = jwt.sign({rows}, config.secret,{
+                    expiresIn: 1440
+                });
+                let id_user = rows[0].id;
+                let data = {
+                    id_user: id_user,
+                    access_token: token,
+                    ip_address: ip.address()
+                }
+                let query = "INSERT INTO access_token SET ?";
+                connection.query(query, data, (error, rows) => {
+                    if(error){
+                        console.log(error);
+                    }else{
+                        res.json({
+                            success: true,
+                            message: "Token JWT Generated",
+                            token: token,
+                            curr_User: id_user
+                        });
+                    };
+                })
+            }else{
+                res.json({
+                    "Error": true,
+                    "Message": "Email atau Password Salah"
+                });
+            };
+        };
+    });
+};
