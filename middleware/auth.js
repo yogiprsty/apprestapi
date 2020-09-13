@@ -62,12 +62,13 @@ exports.login = (req, res) => {
                     expiresIn: 1440
                 });
                 let id_user = rows[0].id;
+                let role_user = rows[0].role;
                 let data = {
                     id_user: id_user,
                     access_token: token,
                     ip_address: ip.address()
                 }
-                let query = "INSERT INTO access_token SET ?";
+                let query = "INSERT INTO akses_token SET ?";
                 connection.query(query, data, (error, rows) => {
                     if(error){
                         console.log(error);
@@ -75,6 +76,7 @@ exports.login = (req, res) => {
                         res.json({
                             success: true,
                             message: "Token JWT Generated",
+                            role: role_user,
                             token: token,
                             curr_User: id_user
                         });

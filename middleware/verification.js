@@ -10,7 +10,6 @@ function verification(roles){
             // verification
             jwt.verify(token, config.secret, (err, decoded) => {
                 if(err){
-                    // RES NOT REST
                     return rest.status(401).send({
                         auth: false,
                         message: 'Token tidak terdaftar'
@@ -24,9 +23,9 @@ function verification(roles){
                             auth: false,
                             message: 'Gagal mengotorisasi hak anda'
                         });
-                    }
-                }
-            })
+                    };
+                };
+            });
         }else{
             return rest.status(401).send({
                 auth: false,
@@ -37,3 +36,7 @@ function verification(roles){
 };
 
 module.exports = verification;
+/* SELECT user.role AS role
+FROM access_token
+JOIN user
+WHERE access_token.id_user = user.id */
