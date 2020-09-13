@@ -89,3 +89,7 @@ exports.login = (req, res) => {
         };
     });
 };
+
+exports.halamanRahasia = (req, res) => {
+    response.ok('Halaman khusus role 2', res);
+};
